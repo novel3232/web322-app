@@ -1,63 +1,131 @@
 /*********************************************************************************
-*  WEB322 – Assignment 02
+*  WEB322 – Assignment 03 
 *  I declare that this assignment is my own work in accordance with Seneca Academic Policy.  
 *  No part of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party websites) or distributed to other students.
 *
 *  Name: Novel Myint Moh 
 *  Student ID: 101573236 
-*  Date: 4/02/2025
-*  Cyclic Web App URL:  
-*  GitHub Repository URL: 
+*  Date: 5/03/2025
+*  Cyclic Web App URL:  https://web322app-t885.onrender.com
+*  GitHub Repository URL: https://github.com/NobleMyintMo/web322app
 **********************************************************************************/
 
 const express = require("express");
 const storeService = require("./store-service");
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Serve static files (CSS, JS, Images)
+cloudinary.config({
+    cloud_name: "dirypc38n",
+    api_key: "425664512858546",
+    api_secret: "HCCnpoCDqfwi9sEuQAx-gwoCCsI",
+    secure: true
+});
+
+const upload = multer();
+
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 
-// Redirect root "/" to "/about"
 app.get("/", (req, res) => res.redirect("/about"));
-
-// Serve HTML pages
 app.get("/about", (req, res) => res.sendFile(__dirname + "/views/about.html"));
 app.get("/shop", (req, res) => res.sendFile(__dirname + "/views/shop.html"));
 app.get("/items", (req, res) => res.sendFile(__dirname + "/views/items.html"));
 app.get("/categories", (req, res) => res.sendFile(__dirname + "/views/categories.html"));
+app.get("/items/add", (req, res) => res.sendFile(__dirname + "/views/addItem.html"));
 
-// API Routes
-app.get("/api/items", (req, res) => {
-    storeService.getAllItems()
-        .then(data => res.json(data))
-        .catch(err => res.status(500).json({ message: err }));
+app.get("/api/items", async (req, res) => {
+    let { category, minDate } = req.query;
+
+    try {
+        let items = await storeService.getAllItems();
+
+        if (category) {
+            items = items.filter(item => item.category == category);
+        }
+
+        if (minDate) {
+            let filterDate = new Date(minDate).setHours(0, 0, 0, 0);
+            items = items.filter(item => new Date(item.postDate).setHours(0, 0, 0, 0) >= filterDate);
+        }
+
+        items.length > 0 ? res.json(items) : res.status(404).json({ message: "No items match the filters" });
+    } catch (err) {
+        console.error("Error in /api/items:", err);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 
-app.get("/api/items/published", (req, res) => {
-    storeService.getPublishedItems()
-        .then(data => res.json(data))
-        .catch(err => res.status(500).json({ message: err }));
+app.get("/api/item/:id", async (req, res) => {
+    try {
+        let item = await storeService.getItemById(req.params.id);
+        res.json(item);
+    } catch (err) {
+        console.error(`Error in /api/item/${req.params.id}:`, err);
+        res.status(404).json({ message: "No result found" });
+    }
 });
 
-app.get("/api/categories", (req, res) => {
-    storeService.getCategories()
-        .then(data => res.json(data))
-        .catch(err => res.status(500).json({ message: err }));
+app.get("/api/items/published", async (req, res) => {
+    try {
+        let items = await storeService.getPublishedItems();
+        res.json(items);
+    } catch (err) {
+        console.error("Error in /api/items/published:", err);
+        res.status(404).json({ message: "No published items available" });
+    }
 });
 
-// Handle 404 - Route not found
+app.get("/api/categories", async (req, res) => {
+    try {
+        let categories = await storeService.getCategories();
+        res.json(categories);
+    } catch (err) {
+        console.error("Error in /api/categories:", err);
+        res.status(404).json({ message: "No categories available" });
+    }
+});
+
+app.post("/items/add", upload.single("featureImage"), async (req, res) => {
+    try {
+        if (req.file) {
+            let streamUpload = (req) => {
+                return new Promise((resolve, reject) => {
+                    let stream = cloudinary.uploader.upload_stream((error, result) => {
+                        if (result) resolve(result);
+                        else reject(error);
+                    });
+                    streamifier.createReadStream(req.file.buffer).pipe(stream);
+                });
+            };
+
+            let uploaded = await streamUpload(req);
+            req.body.featureImage = uploaded.url;
+        } else {
+            req.body.featureImage = "";
+        }
+
+        await storeService.addItem(req.body);
+        res.redirect("/items");
+    } catch (err) {
+        console.error("Error adding item:", err);
+        res.status(500).json({ error: "Unable to add item" });
+    }
+});
+
 app.use((req, res) => {
     res.status(404).json({ message: "Page Not Found" });
 });
 
-// Initialize the store service, then start the server
 storeService.initialize()
     .then(() => {
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+        app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
     })
     .catch(err => {
-        console.error(`Failed to start server: ${err}`);
+        console.error(`❌ Failed to start server: ${err}`);
         process.exit(1);
     });
