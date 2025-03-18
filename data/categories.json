@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+[
+    { "id": 1, "name": "Beverages", "image": "https://images.pexels.com/photos/775032/pexels-photo-775032.jpeg?auto=compress&cs=tinysrgb&w=200" },
+    { "id": 2, "name": "Fast Food", "image": "https://images.pexels.com/photos/551991/pexels-photo-551991.jpeg?auto=compress&cs=tinysrgb&w=300" },
+    { "id": 3, "name": "Desserts", "image": "https://images.pexels.com/photos/587737/pexels-photo-587737.jpeg?auto=compress&cs=tinysrgb&w=300" },
+    { "id": 4, "name": "Restaurant", "image": "https://images.pexels.com/photos/24039438/pexels-photo-24039438/free-photo-of-a-cafe-sign.jpeg?auto=compress&cs=tinysrgb&w=200" },
+    { "id": 5, "name": "Main Course", "image": "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&w=400" }
+]
+=======
 [
     { "id": 1, "name": "Beverages", "featureImage": "https://images.pexels.com/photos/775032/pexels-photo-775032.jpeg?auto=compress&cs=tinysrgb&w=200" },
     { "id": 2, "name": "Fast Food", "featureImage": "https://images.pexels.com/photos/551991/pexels-photo-551991.jpeg?auto=compress&cs=tinysrgb&w=300" },
@@ -5,3 +14,4 @@
     { "id": 4, "name": "Restaurant", "featureImage": "https://images.pexels.com/photos/24039438/pexels-photo-24039438/free-photo-of-a-cafe-sign.jpeg?auto=compress&cs=tinysrgb&w=200" },
     { "id": 5, "name": "Main Course", "featureImage": "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&w=400" }
 ]
+>>>>>>> 6e590bf57ced765152fd5f87548a28b8df625741
