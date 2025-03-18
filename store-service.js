@@ -40,6 +40,13 @@ const getPublishedItems = () => {
     });
 };
 
+const getPublishedItemsByCategory = (category) => {
+    return new Promise((resolve, reject) => {
+        const filteredItems = items.filter(item => item.published && item.category == category);
+        filteredItems.length > 0 ? resolve(filteredItems) : reject("No published items found for this category");
+    });
+};
+
 const getCategories = () => {
     return new Promise((resolve, reject) => {
         categories.length > 0 ? resolve(categories) : reject("No categories available");
@@ -50,11 +57,10 @@ const addItem = (itemData) => {
     return new Promise((resolve, reject) => {
         itemData.published = itemData.published ? true : false;
         itemData.id = items.length + 1;
-        itemData.postDate = new Date().toISOString().split("T")[0];
+        itemData.postDate = new Date().toISOString().split("T")[0]; // Add postDate
         itemData.category = parseInt(itemData.category);
 
         items.push(itemData);
-
 
         fs.writeFile(
             path.join(process.cwd(), "data", "items.json"),
@@ -64,13 +70,12 @@ const addItem = (itemData) => {
                     console.error("Error saving item:", err);
                     return reject("Unable to save item.");
                 }
-                console.log("✅ Item saved to items.json:", itemData); 
+                console.log("✅ Item saved to items.json:", itemData);
                 resolve(itemData);
             }
         );
     });
 };
-
 
 const getItemsByCategory = (category) => {
     return new Promise((resolve, reject) => {
@@ -94,11 +99,6 @@ const getItemsByMinDate = (minDateStr) => {
     });
 };
 
-
-
-
-
-
 const getItemById = (id) => {
     return new Promise((resolve, reject) => {
         const item = items.find(item => item.id == id);
@@ -110,6 +110,7 @@ module.exports = {
     initialize,
     getAllItems,
     getPublishedItems,
+    getPublishedItemsByCategory,
     getCategories,
     addItem,
     getItemsByCategory,
