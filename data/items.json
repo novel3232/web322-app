@@ -1,5 +1,42 @@
 [
-    { "id": 1, "name": "Laptop", "price": 1200, "published": true },
-    { "id": 2, "name": "Phone", "price": 800, "published": false },
-    { "id": 3, "name": "Tablet", "price": 500, "published": true }
+    {
+        "id": 1,
+        "title": "Premium Coffee",
+        "price": 5,
+        "published": true,
+        "category": "Beverages",
+        "featureImage": "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&w=400"
+    },
+    {
+        "id": 2,
+        "title": "Cheeseburger",
+        "price": 8,
+        "published": true,
+        "category": "Fast Food",
+        "featureImage": "https://images.pexels.com/photos/3915915/pexels-photo-3915915.jpeg?auto=compress&cs=tinysrgb&w=400"
+    },
+    {
+        "id": 3,
+        "title": "Italian Pasta",
+        "price": 12,
+        "published": true,
+        "category": "Main Course",
+        "featureImage": "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&w=400"
+    },
+    {
+        "id": 4,
+        "title": "Sushi House",
+        "price": 25,
+        "published": true,
+        "category": "Restaurant",
+        "featureImage": "https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=400"
+    },
+    {
+        "id": 5,
+        "title": "Pizza Corner",
+        "price": 10,
+        "published": true,
+        "category": "Fast Food",
+        "featureImage": "https://images.pexels.com/photos/4109111/pexels-photo-4109111.jpeg?auto=compress&cs=tinysrgb&w=250"
+    }
 ]
