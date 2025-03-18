@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12 text-center">
+            <h1 class="text-center">Welcome to Our Shop</h1>
+        </div>
+    </div>
+
+    {{#if items.length}}
+        <div class="row justify-content-center">
+            {{#each items}}
+                <div class="col-md-4 d-flex justify-content-center">
+                    <div class="item-card">
+                        {{#if this.featureImage}}
+                            <img src="{{this.featureImage}}" alt="{{this.title}}" class="img-fluid">
+                        {{else}}
+                            <img src="/images/default-item.jpg" alt="Default Item" class="img-fluid">
+                        {{/if}}
+                        <h2>{{this.title}}</h2>
+                        <p>Category: <a href="/items?category={{this.category}}">{{this.category}}</a></p>
+                        <p>Price: ${{this.price}}</p>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <div class="col-md-12 text-center">
+            <h2>No items available</h2>
+            <p>Please check back later.</p>
+        </div>
+    {{/if}}
+</div>
