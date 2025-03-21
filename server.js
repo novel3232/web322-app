@@ -6,13 +6,12 @@
 *
 *  Name: Novel Myint Moh 
 *  Student ID: 101573236 
-*  Date: 18/03/2025
-*  Cyclic Web App URL:  https://web322-app-hw11.onrender.com
+*  Date: 21/03/2025
+*  Cyclic Web App URL:  https://web322-app-hev5.onrender.com
 *  GitHub Repository URL: https://github.com/novel3232/web322-app
 **********************************************************************************/
 
 const express = require("express");
-const exphbs = require("express-handlebars");
 const storeService = require("./store-service");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
@@ -20,66 +19,71 @@ const streamifier = require("streamifier");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-const hbs = exphbs.create({
-    defaultLayout: "main", 
-    extname: ".hbs",
-    helpers: {
-        navLink: function(url, text) {
-            return `<li${(url === app.locals.activeRoute) ? ' class="active"' : ''}><a href="${url}">${text}</a></li>`;
-        },
-        equal: function (lvalue, rvalue, options) {
-            if (arguments.length < 3) throw new Error("Handlebars Helper equal needs 2 parameters");
-            return lvalue == rvalue ? options.fn(this) : options.inverse(this);
-        }
-    }
-});
-
-app.engine(".hbs", hbs.engine);
-app.set("view engine", ".hbs");
-
-app.use((req, res, next) => {
-    let route = req.path.substring(1);
-    app.locals.activeRoute = "/" + (isNaN(route.split("/")[1]) ? route.replace(/\/(?!.*)/, "") : route.replace(/\/(.*)/, ""));
-    next();
-});
+app.set("view engine", "ejs");
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+cloudinary.config({
+    cloud_name: "dupzz5jsk",
+    api_key: "294379793524562",
+    api_secret: "uiNnDG8KQVkHpw0qMAGCouh6Etg",
+    secure: true
+});
+
+const upload = multer();
+
+app.use((req, res, next) => {
+    res.locals.active = req.path;
+    next();
+});
+
 app.get("/", (req, res) => res.redirect("/shop"));
-app.get("/about", (req, res) => res.render("about", { title: "About Us" }));
+
+app.get("/about", (req, res) => {
+    res.render("about", { title: "About Us", active: "about" });
+});
+
 app.get("/shop", async (req, res) => {
     try {
         const items = await storeService.getPublishedItems();
         const categories = await storeService.getCategories();
-        res.render("shop", { items, categories });
+        res.render("shop", { title: "Shop", active: "shop", items, categories });
     } catch (err) {
-        res.render("shop", { message: "No items found" });
+        res.render("shop", { title: "Shop", active: "shop", items: [], categories: [], message: "No items found" });
     }
 });
 
 app.get("/items", async (req, res) => {
     try {
         const items = await storeService.getAllItems();
-        res.render("items", { items });
+        const categories = await storeService.getCategories();
+        res.render("items", { title: "Items", active: "items", items, categories });
     } catch (err) {
-        res.render("items", { message: "No items found" });
+        res.render("items", { title: "Items", active: "items", items: [], categories: [], message: "No items found" });
     }
 });
 
 app.get("/categories", async (req, res) => {
     try {
         const categories = await storeService.getCategories();
-        res.render("categories", { categories });
+        res.render("categories", { title: "Categories", active: "categories", categories });
     } catch (err) {
-        res.render("categories", { message: "No categories found" });
+        res.render("categories", { title: "Categories", active: "categories", categories: [] });
     }
 });
 
-app.get("/items/add", (req, res) => res.render("addItem", { categories: storeService.getCategories() }));
 
-app.post("/items/add", multer().single("featureImage"), async (req, res) => {
+app.get("/items/add", async (req, res) => {
+    try {
+        const categories = await storeService.getCategories();
+        res.render("addItem", { title: "Add Item", active: "add", categories });
+    } catch (err) {
+        res.render("addItem", { title: "Add Item", active: "add", categories: [] });
+    }
+});
+
+app.post("/items/add", upload.single("featureImage"), async (req, res) => {
     try {
         if (req.file) {
             let streamUpload = (req) => {
@@ -107,7 +111,7 @@ app.post("/items/add", multer().single("featureImage"), async (req, res) => {
 });
 
 app.use((req, res) => {
-    res.status(404).render("404", { title: "Page Not Found" });
+    res.status(404).render("404", { title: "Page Not Found", active: "" });
 });
 
 storeService.initialize()
