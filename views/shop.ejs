@@ -1,0 +1,20 @@
+<%- include("partials/header", { title: "Shop", active: "shop" }) %>
+
+<h1 class="text-center">Welcome to Our Shop</h1>
+
+<div class="items-container">
+    <% if (items.length > 0) { %>
+        <% items.forEach(item => { %>
+            <div class="item-card">
+                <img src="<%= item.featureImage %>" alt="<%= item.title %>">
+                <h2><%= item.title %></h2>
+                <p>Category: <a href="/categories"><%= categories.find(cat => cat.id === item.category)?.category || "Unknown" %></a></p>
+                <p>Price: $<%= item.price %></p>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p class="text-center">No items available.</p>
+    <% } %>
+</div>
+
+<%- include("partials/footer") %>

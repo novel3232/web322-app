@@ -1,0 +1,15 @@
+<%- include("partials/header", { title: "Categories", active: "categories" }) %>
+
+<h1 class="text-center">Food Categories</h1>
+<div class="items-container">
+    <% categories.forEach(category => { %>
+        <div class="item-card">
+            <img src="<%= category.image %>" alt="<%= category.name %>">
+            <h2><%= category.name %></h2>
+            <a href="/items?category=<%= category.id %>">View Items</a>
+        </div>
+    <% }) %>
+</div>
+
+
+<%- include("partials/footer") %>
