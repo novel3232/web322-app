@@ -1,14 +1,14 @@
 /*********************************************************************************
-*  WEB322 – Assignment 04 
+*  WEB322 – Assignment 05 
 *  I declare that this assignment is my own work in accordance with Seneca Academic Policy.  
 *  No part of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party websites) or distributed to other students.
 *
 *  Name: Novel Myint Moh 
 *  Student ID: 101573236 
-*  Date: 21/03/2025
-*  Cyclic Web App URL:  https://web322-app-hev5.onrender.com
-*  GitHub Repository URL: https://github.com/novel3232/web322-app
+*  Date: [8/4/2025]
+*  Cyclic Web App URL: [Your Cyclic URL]
+*  GitHub Repository URL: [Your GitHub URL]
 **********************************************************************************/
 
 const express = require("express");
@@ -19,6 +19,7 @@ const streamifier = require("streamifier");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// ✅ Set EJS as view engine
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
@@ -67,12 +68,22 @@ app.get("/items", async (req, res) => {
 app.get("/categories", async (req, res) => {
     try {
         const categories = await storeService.getCategories();
-        res.render("categories", { title: "Categories", active: "categories", categories });
+        res.render("categories", {
+            title: "Categories",
+            active: "categories",
+            categories,
+            showAddForm: true 
+        });
     } catch (err) {
-        res.render("categories", { title: "Categories", active: "categories", categories: [] });
+        res.render("categories", {
+            title: "Categories",
+            active: "categories",
+            categories: [],
+            message: "No results",
+            showAddForm: true
+        });
     }
 });
-
 
 app.get("/items/add", async (req, res) => {
     try {
@@ -86,7 +97,7 @@ app.get("/items/add", async (req, res) => {
 app.post("/items/add", upload.single("featureImage"), async (req, res) => {
     try {
         if (req.file) {
-            let streamUpload = (req) => {
+            const streamUpload = (req) => {
                 return new Promise((resolve, reject) => {
                     let stream = cloudinary.uploader.upload_stream((error, result) => {
                         if (result) resolve(result);
@@ -105,8 +116,38 @@ app.post("/items/add", upload.single("featureImage"), async (req, res) => {
         await storeService.addItem(req.body);
         res.redirect("/items");
     } catch (err) {
-        console.error("Error adding item:", err);
         res.status(500).json({ error: "Unable to add item" });
+    }
+});
+
+app.get("/categories/add", (req, res) => {
+    res.render("addCategory", { title: "Add Category", active: "add" });
+});
+
+app.post("/categories/add", async (req, res) => {
+    try {
+        await storeService.addCategory(req.body);
+        res.redirect("/categories");
+    } catch (err) {
+        res.status(500).json({ error: "Unable to add category" });
+    }
+});
+
+app.get("/categories/delete/:id", async (req, res) => {
+    try {
+        await storeService.deleteCategoryById(req.params.id);
+        res.redirect("/categories");
+    } catch (err) {
+        res.status(500).send("Unable to Remove Category / Category not found");
+    }
+});
+
+app.get("/items/delete/:id", async (req, res) => {
+    try {
+        await storeService.deletePostById(req.params.id);
+        res.redirect("/items");
+    } catch (err) {
+        res.status(500).send("Unable to Remove Post / Post not found");
     }
 });
 
@@ -114,6 +155,7 @@ app.use((req, res) => {
     res.status(404).render("404", { title: "Page Not Found", active: "" });
 });
 
+// Initialize DB and start server
 storeService.initialize()
     .then(() => {
         app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
@@ -122,3 +164,12 @@ storeService.initialize()
         console.error(`❌ Failed to start server: ${err}`);
         process.exit(1);
     });
+
+
+
+
+
+
+
+
+
