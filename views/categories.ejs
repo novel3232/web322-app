@@ -1,15 +1,48 @@
 <%- include("partials/header", { title: "Categories", active: "categories" }) %>
 
-<h1 class="text-center">Food Categories</h1>
-<div class="items-container">
-    <% categories.forEach(category => { %>
-        <div class="item-card">
-            <img src="<%= category.image %>" alt="<%= category.name %>">
-            <h2><%= category.name %></h2>
-            <a href="/items?category=<%= category.id %>">View Items</a>
-        </div>
-    <% }) %>
+<h1 class="text-center">Categories</h1>
+
+<div class="row">
+    <% if (categories && categories.length > 0) { %>
+        <% categories.forEach(category => { %>
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm text-center">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= category.category %></h5>
+                        <a href="/items?category=<%= category.id %>" class="btn btn-primary">View Items</a>
+                        <a href="/categories/delete/<%= category.id %>" class="btn btn-danger ms-2">Delete</a>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p class="text-center">No categories available.</p>
+    <% } %>
 </div>
 
+<hr />
+
+<% if (showAddForm) { %>
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h2>Add Category</h2>
+        <br />
+        <form method="post" action="/categories/add">
+            <fieldset>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="category">Category Name:</label>
+                            <input class="form-control" id="category" name="category" type="text" required />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <hr />
+            <input type="submit" class="btn btn-primary pull-right" value="Add Category" /><br /><br /><br />
+        </form>
+    </div>
+</div>
+<% } %>
 
 <%- include("partials/footer") %>

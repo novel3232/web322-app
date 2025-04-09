@@ -10,6 +10,7 @@
                 <h2><%= item.title %></h2>
                 <p>Category: <a href="/categories"><%= categories.find(cat => cat.id === item.category)?.category || "Unknown" %></a></p>
                 <p>Price: $<%= item.price %></p>
+                <p><%= item.body %></p> <!-- ✅ Description shown here -->
             </div>
         <% }); %>
     <% } else { %>
