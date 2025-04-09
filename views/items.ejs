@@ -8,9 +8,15 @@
             <div class="item-card">
                 <img src="<%= item.featureImage %>" alt="<%= item.title %>">
                 <h2><%= item.title %></h2>
-                <p>Category: <a href="/categories"><%= categories.find(cat => cat.id === item.category)?.category || "Unknown" %></a></p>
+                <p>Category: 
+                    <a href="/categories">
+                        <%= categories.find(cat => cat.id === item.category)?.category || "Unknown" %>
+                    </a>
+                </p>
                 <p>Price: $<%= item.price %></p>
-                <p><%= item.body %></p> <!-- ✅ Description shown here -->
+                <p><%= item.body %></p>
+
+                <a href="/items/delete/<%= item.id %>" class="btn btn-danger">Delete</a>
             </div>
         <% }); %>
     <% } else { %>
