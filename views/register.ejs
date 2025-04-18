@@ -1,0 +1,40 @@
+<%- include("partials/header", { title: "Register", active: "register" }) %>
+
+<h1 class="text-center mb-4">Register</h1>
+
+<% if (typeof successMessage !== 'undefined' && successMessage) { %>
+    <div class="alert alert-success text-center w-50 mx-auto">
+        <strong>Success:</strong> <%= successMessage %>
+    </div>
+    <div class="text-center">
+        <a class="btn btn-success mt-2" href="/login">Proceed to Log in</a>
+    </div>
+<% } else { %>
+    <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+        <div class="alert alert-danger text-center w-50 mx-auto">
+            <strong>Error:</strong> <%= errorMessage %>
+        </div>
+    <% } %>
+
+    <form method="POST" action="/register" class="bg-light p-4 rounded w-50 mx-auto shadow-sm">
+        <div class="mb-3">
+            <label for="userName" class="form-label">User Name</label>
+            <input type="text" class="form-control" name="userName" id="userName" value="<%= userName || '' %>" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="password" required>
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" name="password2" id="password2" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" name="email" id="email" required>
+        </div>
+        <button type="submit" class="btn btn-dark w-100">Register</button>
+    </form>
+<% } %>
+
+<%- include("partials/footer") %>

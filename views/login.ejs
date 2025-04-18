@@ -1,0 +1,23 @@
+<%- include("partials/header", { title: "Login", active: "login" }) %>
+
+<h1 class="text-center mb-4">Login</h1>
+
+<% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+    <div class="alert alert-danger text-center w-50 mx-auto">
+        <strong>Error:</strong> <%= errorMessage %>
+    </div>
+<% } %>
+
+<form method="POST" action="/login" class="bg-light p-4 rounded w-50 mx-auto shadow-sm">
+    <div class="mb-3">
+        <label for="userName" class="form-label">Username</label>
+        <input type="text" class="form-control" name="userName" id="userName" value="<%= userName || '' %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" id="password" required>
+    </div>
+    <button type="submit" class="btn btn-dark w-100">Login</button>
+</form>
+
+<%- include("partials/footer") %>

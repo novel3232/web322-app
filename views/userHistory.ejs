@@ -1,0 +1,30 @@
+<%- include("partials/header", { title: "User History", active: "" }) %>
+
+<h1 class="text-center mb-4">User Login History</h1>
+
+<div class="table-responsive w-75 mx-auto">
+    <table class="table table-bordered table-striped bg-light shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">User Agent</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (session.user && session.user.loginHistory.length > 0) { %>
+                <% session.user.loginHistory.forEach(record => { %>
+                    <tr>
+                        <td><%= record.dateTime %></td>
+                        <td><%= record.userAgent %></td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="2" class="text-center">No login history found.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<%- include("partials/footer") %>
